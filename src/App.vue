@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-md-4 offset-md-4">
+      <div class="col-md-6 offset-md-3">
 
         <div class="card margin-top" v-for="(post, index) in posts" :key="index">
           <div class="card-header">
@@ -11,7 +11,7 @@
               {{ post.body }}
             </div>
         </div>
-
+        <infinite-loading @infinite="getPosts"></infinite-loading>
       </div>
     </div>
   </div>
@@ -19,19 +19,30 @@
 
 <script>
 import axios from 'axios'
+import InfiniteLoading from 'vue-infinite-loading';
 export default {
+  components: {
+    InfiniteLoading
+  },
   mounted () {
-    this.getPosts()
+    
   },
   data () {
     return {
+      page: 1,
       posts: []
     }
   },
   methods: {
-    getPosts() {
-      axios.get('https://jsonplaceholder.typicode.com/posts?_page=2').then( response => {
-        this.posts = response.data
+    getPosts($state) {
+      axios.get('https://jsonplaceholder.typicode.com/posts?&_page=' + this.page).then( response => {
+        if (response.data.length) {
+          this.page += 1
+          this.posts.push(...response.data)
+          $state.loaded()
+        } else {
+           $state.complete();
+        }
       })
     }
   }
