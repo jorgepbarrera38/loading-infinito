@@ -1,28 +1,44 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 offset-md-4">
+
+        <div class="card margin-top" v-for="(post, index) in posts" :key="index">
+          <div class="card-header">
+            {{ post.title }}
+          </div>
+            <div class="card-body">
+              {{ post.body }}
+            </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import axios from 'axios'
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  mounted () {
+    this.getPosts()
+  },
+  data () {
+    return {
+      posts: []
+    }
+  },
+  methods: {
+    getPosts() {
+      axios.get('https://jsonplaceholder.typicode.com/posts?_page=2').then( response => {
+        this.posts = response.data
+      })
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.margin-top {
+  margin-top:20px
 }
 </style>
