@@ -24,9 +24,6 @@ export default {
   components: {
     InfiniteLoading
   },
-  mounted () {
-    
-  },
   data () {
     return {
       page: 1,
